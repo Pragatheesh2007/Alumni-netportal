@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Network Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.5/auth0-spa-js.production.js"></script>
+</head>
+<body data-theme="light">
+    <!-- Global Loading Animation -->
+<div id="globalLoader" class="loader-container">
+  <div class="container">
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+  </div>
+</div>
+    <!-- Animated Background -->
+    <div class="background-container">
+        <div class="gradient-bg"></div>
+        <div class="particles-container" id="particles"></div>
+    </div>
+
+    <!-- Authentication Screen -->
+    <div class="auth-screen" id="authScreen">
+        <div class="auth-container">
+            <!-- Tab Navigation -->
+            <div class="tab-navigation">
+                <button class="tab-btn active" id="loginTab" data-tab="login">
+                    <span class="tab-icon">🔑</span>
+                    <span class="tab-text">Login</span>
+                </button>
+                <button class="tab-btn" id="signupTab" data-tab="signup">
+                    <span class="tab-icon">👤</span>
+                    <span class="tab-text">Sign Up</span>
+                </button>
+                <div class="tab-indicator" id="tabIndicator"></div>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Login Form -->
+                <div class="tab-pane active" id="loginPane">
+                    <div class="form-header">
+                        <h2 class="form-title">Welcome Back</h2>
+                        <p class="form-subtitle">Sign in to your alumni account</p>
+                    </div>
+
+                    <form class="auth-form" id="loginForm">
+                        <div class="form-group">
+                            <div class="floating-input">
+                                <input type="email" id="loginEmail" class="form-input" required>
+                                <label for="loginEmail" class="floating-label">Email Address</label>
+                                <div class="input-border"></div>
+                            </div>
+                            <div class="validation-message" id="loginEmailError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="floating-input">
+                                <input type="password" id="loginPassword" class="form-input" required>
+                                <label for="loginPassword" class="floating-label">Password</label>
+                                <div class="input-border"></div>
+                                <button type="button" class="password-toggle" id="loginPasswordToggle">
+                                    <span class="eye-icon">👁️</span>
+                                </button>
+                            </div>
+                            <div class="validation-message" id="loginPasswordError"></div>
+                        </div>
+
+                        <div class="form-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="rememberMe">
+                                <span class="checkmark"></span>
+                                Remember me
+                            </label>
+                            <a href="#" class="forgot-link">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="submit-btn ripple-btn" id="loginSubmit">
+                            <span class="btn-text">Sign In</span>
+                            <div class="btn-loader hidden">
+                                <div class="spinner"></div>
+                            </div>
+                        </button>
+
+                        <p class="demo-credentials">
+                            Demo: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f89c9d9597b899948d959691d69d9c8d">[email&#160;protected]</a> / password123<br>
+                            Admin: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="91f0f5fcf8ffd1f0fde4fcfff8bff4f5e4">[email&#160;protected]</a> / admin123
+                        </p>
+                    </form>
+                </div>
+
+                <!-- Signup Form -->
+                <div class="tab-pane" id="signupPane">
+                    <div class="form-header">
+                        <h2 class="form-title">Join Our Network</h2>
+                        <p class="form-subtitle">Create your alumni account</p>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="signupProgress"></div>
+                        </div>
+                        <div class="progress-text" id="progressText">Step 1 of 4</div>
+                    </div>
+
+                    <form class="auth-form" id="signupForm">
+                        <!-- Step 1: Personal Info -->
+                        <div class="form-step active" id="step1">
+                            <div class="form-group">
+                                <div class="floating-input">
+                                    <input type="text" id="signupName" class="form-input" required>
+                                    <label for="signupName" class="floating-label">Full Name</label>
+                                    <div class="input-border"></div>
+                                </div>
+                                <div class="validation-message" id="signupNameError"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="floating-input">
+                                    <input type="email" id="signupEmail" class="form-input" required>
+                                    <label for="signupEmail" class="floating-label">Email Address</label>
+                                    <div class="input-border"></div>
+                                </div>
+                                <div class="validation-message" id="signupEmailError"></div>
+                            </div>
+
+                            <button type="button" class="submit-btn ripple-btn next-btn" id="nextStep1">
+                                <span class="btn-text">Continue</span>
+                            </button>
+                        </div>
+
+                        <!-- Step 2: Security -->
+                        <div class="form-step" id="step2">
+                            <div class="form-group">
+                                <div class="floating-input">
+                                    <input type="password" id="signupPassword" class="form-input" required>
+                                    <label for="signupPassword" class="floating-label">Password</label>
+                                    <div class="input-border"></div>
+                                    <button type="button" class="password-toggle" id="signupPasswordToggle">
+                                        <span class="eye-icon">👁️</span>
+                                    </button>
+                                </div>
+                                <div class="password-strength" id="passwordStrength">
+                                    <div class="strength-bar">
+                                        <div class="strength-fill" id="strengthFill"></div>
+                                    </div>
+                                    <div class="strength-text" id="strengthText">Password strength</div>
+                                </div>
+                                <div class="validation-message" id="signupPasswordError"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="floating-input">
+                                    <input type="password" id="confirmPassword" class="form-input" required>
+                                    <label for="confirmPassword" class="floating-label">Confirm Password</label>
+                                    <div class="input-border"></div>
+                                </div>
+                                <div class="validation-message" id="confirmPasswordError"></div>
+                            </div>
+
+                            <div class="step-buttons">
+                                <button type="button" class="submit-btn btn--outline back-btn" id="backStep2">
+                                    <span class="btn-text">Back</span>
+                                </button>
+                                <button type="button" class="submit-btn ripple-btn next-btn" id="nextStep2">
+                                    <span class="btn-text">Continue</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Additional Profile Info -->
+                        <div class="form-step" id="step3">
+                            <div class="form-group">
+                                <div class="floating-input">
+                                    <input type="text" id="signupCompany" class="form-input" required>
+                                    <label for="signupCompany" class="floating-label">Company</label>
+                                    <div class="input-border"></div>
+                                </div>
+                                <div class="validation-message" id="signupCompanyError"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="floating-input">
+                                    <input type="text" id="signupLocation" class="form-input" required>
+                                    <label for="signupLocation" class="floating-label">Location</label>
+                                    <div class="input-border"></div>
+                                </div>
+                                <div class="validation-message" id="signupLocationError"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="floating-input">
+                                    <textarea id="signupBio" class="form-input" rows="3" required placeholder="Tell us about yourself..."></textarea>
+                                    <label for="signupBio" class="floating-label">Bio</label>
+                                    <div class="input-border"></div>
+                                </div>
+                                <div class="validation-message" id="signupBioError"></div>
+                            </div>
+
+                            <div class="step-buttons">
+                                <button type="button" class="submit-btn btn--outline back-btn" id="backStep3">
+                                    <span class="btn-text">Back</span>
+                                </button>
+                                <button type="button" class="submit-btn ripple-btn next-btn" id="nextStep3">
+                                    <span class="btn-text">Continue</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Academic Profile -->
+                        <div class="form-step" id="step4">
+                            <div class="form-group">
+                                <label class="section-label">Select Your Role</label>
+                                <div class="role-selection" id="roleSelection">
+                                    <div class="role-card" data-role="student">
+                                        <div class="role-icon">🎓</div>
+                                        <div class="role-title">Student</div>
+                                        <div class="role-description">Current student</div>
+                                    </div>
+                                    <div class="role-card" data-role="alumni">
+                                        <div class="role-icon">🏆</div>
+                                        <div class="role-title">Alumni</div>
+                                        <div class="role-description">Graduate</div>
+                                    </div>
+                                    <div class="role-card" data-role="admin">
+                                        <div class="role-icon">⚙️</div>
+                                        <div class="role-title">Admin</div>
+                                        <div class="role-description">Administrator</div>
+                                    </div>
+                                </div>
+                                <div class="validation-message" id="roleError"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="floating-input">
+                                    <select id="major" class="form-input form-select" required>
+                                        <option value=""></option>
+                                        <option value="Computer Science">Computer Science</option>
+                                        <option value="Information Technology">Information Technology</option>
+                                        <option value="Software Engineering">Software Engineering</option>
+                                        <option value="Data Science">Data Science</option>
+                                        <option value="Cybersecurity">Cybersecurity</option>
+                                        <option value="Computer Engineering">Computer Engineering</option>
+                                        <option value="Information Systems">Information Systems</option>
+                                        <option value="Digital Media">Digital Media</option>
+                                        <option value="Game Development">Game Development</option>
+                                    </select>
+                                    <label for="major" class="floating-label">Major</label>
+                                    <div class="input-border"></div>
+                                </div>
+                                <div class="validation-message" id="majorError"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="floating-input">
+                                    <input type="number" id="graduationYear" class="form-input" min="1950" max="2030" required>
+                                    <label for="graduationYear" class="floating-label">Graduation Year</label>
+                                    <div class="input-border"></div>
+                                </div>
+                                <div class="validation-message" id="graduationYearError"></div>
+                            </div>
+
+                            <div class="step-buttons">
+                                <button type="button" class="submit-btn btn--outline back-btn" id="backStep4">
+                                    <span class="btn-text">Back</span>
+                                </button>
+                                <button type="submit" class="submit-btn ripple-btn" id="signupSubmit">
+                                    <span class="btn-text">Create Account</span>
+                                    <div class="btn-loader hidden">
+                                        <div class="spinner"></div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Platform -->
+    <div class="main-platform hidden" id="mainPlatform">
+        <!-- Navigation Header -->
+        <header class="platform-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1 class="platform-logo">🎓 Alumni Network</h1>
+                </div>
+                <nav class="main-nav">
+                    <button class="nav-btn active" data-section="dashboard">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text">Dashboard</span>
+                    </button>
+                    <button class="nav-btn" data-section="jobs">
+                        <span class="nav-icon">💼</span>
+                        <span class="nav-text">Jobs</span>
+                        <span class="nav-badge">25+</span>
+                    </button>
+                    <button class="nav-btn" data-section="directory">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-text">Directory</span>
+                    </button>
+                    <button class="nav-btn" data-section="events">
+                        <span class="nav-icon">📅</span>
+                        <span class="nav-text">Events</span>
+                    </button>
+                    <button class="nav-btn" data-section="messages">
+                        <span class="nav-icon">💬</span>
+                        <span class="nav-text">Messages</span>
+                        <span class="nav-badge" id="messageBadge" style="display: none;">0</span>
+                    </button>
+                    <button class="nav-btn" data-section="profile">
+                        <span class="nav-icon">👤</span>
+                        <span class="nav-text">Profile</span>
+                    </button>
+                </nav>
+                <div class="user-section">
+                    <button id="loginButton" class="submit-btn">Login</button>
+                    <button id="logoutButton" class="submit-btn" style="display: none;">Logout</button>
+                    <div class="user-info">
+                        <img src="https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg" 
+                             alt="Profile" class="user-avatar">
+                        <span class="user-name" id="userName">Demo User</span>
+                        <span id="userName">Guest</span>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">
+                        <span class="logout-icon">🚪</span>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="platform-main">
+            <!-- Dashboard Section -->
+            <section class="platform-section active" id="dashboardSection">
+                <div class="section-header">
+                    <h2 class="section-title">Dashboard</h2>
+                    <p class="section-subtitle">Welcome back to your alumni network</p>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card stats-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Network Stats</h3>
+                            <span class="card-icon">📈</span>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value">1,247</div>
+                                <div class="stat-label">Alumni</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">324</div>
+                                <div class="stat-label">Students</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">25</div>
+                                <div class="stat-label">Job Openings</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">15</div>
+                                <div class="stat-label">Events</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card recent-jobs-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Latest Job Opportunities</h3>
+                            <a href="#" class="view-all-link" data-section="jobs">View All</a>
+                        </div>
+                        <div class="job-list" id="recentJobs">
+                            <!-- Jobs will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card upcoming-events-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Upcoming Events</h3>
+                            <a href="#" class="view-all-link" data-section="events">View All</a>
+                        </div>
+                        <div class="event-list" id="upcomingEvents">
+                            <!-- Events will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Jobs Section -->
+            <section class="platform-section" id="jobsSection">
+                <div class="section-header">
+                    <h2 class="section-title">Job Opportunities</h2>
+                    <p class="section-subtitle">Discover amazing career opportunities from our alumni network</p>
+                    <!-- Admin Job Creation Button -->
+                    <button id="adminJobBtn" class="admin-btn" style="display: none;">
+                        <span class="btn-icon">➕</span>
+                        Post New Job
+                    </button>
+                </div>
+
+                <div class="jobs-filters">
+                    <div class="filter-group">
+                        <select class="filter-select" id="categoryFilter">
+                            <option value="">All Categories</option>
+                            <option value="software">Software</option>
+                            <option value="data-science">Data Science</option>
+                            <option value="design">Design</option>
+                            <option value="management">Management</option>
+                            <option value="cybersecurity">Cybersecurity</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <select class="filter-select" id="levelFilter">
+                            <option value="">All Levels</option>
+                            <option value="entry-level">Entry Level</option>
+                            <option value="mid-level">Mid Level</option>
+                            <option value="senior">Senior</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <select class="filter-select" id="typeFilter">
+                            <option value="">All Types</option>
+                            <option value="full-time">Full Time</option>
+                            <option value="internship">Internship</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="jobs-grid" id="jobsGrid">
+                    <!-- Jobs will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Directory Section -->
+            <section class="platform-section" id="directorySection">
+                <div class="section-header">
+                    <h2 class="section-title">Alumni Directory</h2>
+                    <p class="section-subtitle">Connect with fellow alumni and current students</p>
+                </div>
+
+                <div class="directory-filters">
+                    <input type="search" class="search-input" id="directorySearch" placeholder="Search by name, company, or major...">
+                    <select class="filter-select" id="roleFilter">
+                        <option value="">All Roles</option>
+                        <option value="alumni">Alumni</option>
+                        <option value="student">Students</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+
+                <div class="directory-grid" id="directoryGrid">
+                    <!-- Directory will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Events Section -->
+            <section class="platform-section" id="eventsSection">
+                <div class="section-header">
+                    <h2 class="section-title">Events & Networking</h2>
+                    <p class="section-subtitle">Join upcoming events and stay connected with the community</p>
+                    <!-- Admin Event Creation Button -->
+                    <button id="adminEventBtn" class="admin-btn" style="display: none;">
+                        <span class="btn-icon">➕</span>
+                        Create New Event
+                    </button>
+                </div>
+
+                <div class="events-grid" id="eventsGrid">
+                    <!-- Events will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Messages Section -->
+            <section class="platform-section" id="messagesSection">
+                <div class="section-header">
+                    <h2 class="section-title">Messages</h2>
+                    <p class="section-subtitle">Connect and communicate with fellow alumni</p>
+                </div>
+                
+                <div class="messages-layout">
+                    <div class="messages-sidebar">
+                        <div class="compose-section">
+                            <h3 class="compose-title">Send New Message</h3>
+                            <div class="compose-form">
+                                <input type="text" class="message-input" id="recipientInput" placeholder="To: Username">
+                                <textarea class="message-textarea" id="messageContent" placeholder="Type your message..." rows="3"></textarea>
+                                <button class="send-message-btn" onclick="sendDirectMessage()">
+                                    <span class="btn-icon">📤</span>
+                                    Send Message
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="users-section">
+                            <h3 class="users-title">Online Users</h3>
+                            <div class="users-list" id="messageUsersList">
+                                <!-- Users will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="messages-main">
+                        <div class="messages-tabs">
+                            <button class="message-tab active" onclick="switchMessageTab('chat')">
+                                <span class="tab-icon">💬</span>
+                                Chat
+                            </button>
+                            <button class="message-tab" onclick="switchMessageTab('notifications')">
+                                <span class="tab-icon">🔔</span>
+                                Notifications
+                                <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                            </button>
+                        </div>
+                        
+                        <div class="message-content active" id="chatContent">
+                            <div class="chat-messages" id="chatMessages">
+                                <div class="welcome-message">
+                                    <div class="welcome-icon">👋</div>
+                                    <h3>Welcome to Alumni Network Messages!</h3>
+                                    <p>Connect with fellow alumni and current students. Send messages using the form on the left or click on any user to start a conversation.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="message-content" id="notificationsContent">
+                            <div class="notifications-list" id="notificationsList">
+                                <div class="no-notifications">
+                                    <div class="no-notifications-icon">🔔</div>
+                                    <h3>No notifications yet</h3>
+                                    <p>When you receive messages, they will appear here.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Section -->
+            <section class="platform-section" id="profileSection">
+                <div class="section-header">
+                    <h2 class="section-title">My Profile</h2>
+                    <p class="section-subtitle">Manage your profile and account settings</p>
+                </div>
+
+                <div class="profile-content">
+                    <div class="profile-card">
+                        <!-- Theme Toggle Section -->
+                        <div class="theme-toggle-section">
+                            <h4>Theme Settings</h4>
+                            <div class="theme-toggle">
+                                <span class="theme-label">🌞 Light</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="theme-label">🌙 Dark</span>
+                            </div>
+                        </div>
+
+                        <div class="profile-header">
+                            <img src="https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg" 
+                                 alt="Profile" class="profile-avatar">
+                            <div class="profile-info">
+                                <h3 class="profile-name" id="profileName">Demo User</h3>
+                                <p class="profile-role" id="profileRole">Alumni</p>
+                                <p class="profile-details" id="profileDetails">Computer Science • Class of 2020</p>
+                                <p class="profile-company" id="profileCompany">Tech Corp</p>
+                                <p class="profile-location" id="profileLocation">San Francisco, CA</p>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-bio-section">
+                            <h4>About</h4>
+                            <p class="profile-bio" id="profileBio">Software engineer passionate about building great products and helping fellow alumni succeed in their careers.</p>
+                        </div>
+                        
+                        <div class="profile-stats">
+                            <div class="profile-stat">
+                                <span class="stat-value">156</span>
+                                <span class="stat-label">Connections</span>
+                            </div>
+                            <div class="profile-stat">
+                                <span class="stat-value">23</span>
+                                <span class="stat-label">Events Attended</span>
+                            </div>
+                            <div class="profile-stat">
+                                <span class="stat-value">8</span>
+                                <span class="stat-label">Job Referrals</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-form-card">
+                        <h4 class="form-card-title">Edit Profile</h4>
+                        <form class="profile-form" id="profileForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="editName" value="Demo User">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="editEmail" value="demo@alumni.edu">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Company</label>
+                                    <input type="text" class="form-control" id="editCompany" value="Tech Corp">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Location</label>
+                                    <input type="text" class="form-control" id="editLocation" value="San Francisco, CA">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Bio</label>
+                                <textarea class="form-control" id="editBio" rows="3">Software engineer passionate about building great products and helping fellow alumni succeed in their careers.</textarea>
+                            </div>
+                            <button type="submit" class="btn btn--primary">Update Profile</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Job Creation Modal -->
+    <div class="modal" id="jobCreationModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Job Posting</h3>
+                <button class="modal-close" onclick="hideJobCreationModal()">&times;</button>
+            </div>
+            <form id="jobCreationForm" class="modal-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Job Title *</label>
+                        <input type="text" name="jobTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Company *</label>
+                        <input type="text" name="jobCompany" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Location *</label>
+                        <input type="text" name="jobLocation" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Salary *</label>
+                        <input type="text" name="jobSalary" placeholder="$120,000 - $150,000" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Job Type</label>
+                        <select name="jobType">
+                            <option value="full-time">Full Time</option>
+                            <option value="part-time">Part Time</option>
+                            <option value="internship">Internship</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select name="jobCategory">
+                            <option value="software">Software</option>
+                            <option value="data-science">Data Science</option>
+                            <option value="design">Design</option>
+                            <option value="management">Management</option>
+                            <option value="cybersecurity">Cybersecurity</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Experience Level</label>
+                    <select name="jobLevel">
+                        <option value="entry-level">Entry Level</option>
+                        <option value="mid-level">Mid Level</option>
+                        <option value="senior">Senior</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Job Description *</label>
+                    <textarea name="jobDescription" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Requirements *</label>
+                    <textarea name="jobRequirements" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Benefits</label>
+                    <textarea name="jobBenefits" rows="2"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" onclick="hideJobCreationModal()" class="btn btn--outline">Cancel</button>
+                    <button type="submit" class="btn btn--primary">Post Job</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Event Creation Modal -->
+    <div class="modal" id="eventCreationModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Event</h3>
+                <button class="modal-close" onclick="hideEventCreationModal()">&times;</button>
+            </div>
+            <form id="eventCreationForm" class="modal-form">
+                <div class="form-group">
+                    <label>Event Title *</label>
+                    <input type="text" name="eventTitle" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date *</label>
+                        <input type="date" name="eventDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select name="eventCategory">
+                            <option value="networking">Networking</option>
+                            <option value="workshop">Workshop</option>
+                            <option value="seminar">Seminar</option>
+                            <option value="career">Career</option>
+                            <option value="social">Social</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Location *</label>
+                    <input type="text" name="eventLocation" required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="eventVirtual"> Virtual Event
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Event Description *</label>
+                    <textarea name="eventDescription" rows="4" required></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" onclick="hideEventCreationModal()" class="btn btn--outline">Cancel</button>
+                    <button type="submit" class="btn btn--primary">Create Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Details Modal -->
+    <div class="modal" id="userDetailsModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>User Details</h3>
+                <button class="modal-close" onclick="hideUserDetailsModal()">&times;</button>
+            </div>
+            <div class="user-details-content" id="userDetailsContent">
+                <!-- User details will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Remove User Confirmation Modal -->
+    <div class="modal" id="removeUserModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Remove User</h3>
+                <button class="modal-close" onclick="hideRemoveUserModal()">&times;</button>
+            </div>
+            <div class="modal-form">
+                <p>Are you sure you want to remove this user from the directory?</p>
+                <div class="user-remove-info" id="userRemoveInfo">
+                    <!-- User info will be populated -->
+                </div>
+                <div class="modal-actions">
+                    <button type="button" onclick="hideRemoveUserModal()" class="btn btn--outline">Cancel</button>
+                    <button type="button" onclick="confirmRemoveUser()" class="btn btn--danger">Remove User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Remove Job Confirmation Modal -->
+    <div class="modal" id="removeJobModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Remove Job</h3>
+                <button class="modal-close" onclick="hideRemoveJobModal()">&times;</button>
+            </div>
+            <div class="modal-form">
+                <p>Are you sure you want to remove this job posting?</p>
+                <div class="job-remove-info" id="jobRemoveInfo">
+                    <!-- Job info will be populated -->
+                </div>
+                <div class="modal-actions">
+                    <button type="button" onclick="hideRemoveJobModal()" class="btn btn--outline">Cancel</button>
+                    <button type="button" onclick="confirmRemoveJob()" class="btn btn--danger">Remove Job</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Remove Event Confirmation Modal -->
+    <div class="modal" id="removeEventModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Remove Event</h3>
+                <button class="modal-close" onclick="hideRemoveEventModal()">&times;</button>
+            </div>
+            <div class="modal-form">
+                <p>Are you sure you want to remove this event?</p>
+                <div class="event-remove-info" id="eventRemoveInfo">
+                    <!-- Event info will be populated -->
+                </div>
+                <div class="modal-actions">
+                    <button type="button" onclick="hideRemoveEventModal()" class="btn btn--outline">Cancel</button>
+                    <button type="button" onclick="confirmRemoveEvent()" class="btn btn--danger">Remove Event</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div class="message-container" id="messageContainer">
+        <div class="message success-message hidden" id="successMessage">
+            <div class="message-icon">✅</div>
+            <div class="message-text"></div>
+        </div>
+        <div class="message error-message hidden" id="errorMessage">
+            <div class="message-icon">❌</div>
+            <div class="message-text"></div>
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="app.js"></script>
+
+    <style>
+        /* Theme Variables */
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #e1e5e9;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --primary-color: #667eea;
+            --danger-color: #ff6b6b;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --input-bg: #ffffff;
+            --header-bg: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #e0e0e0;
+            --border-color: #444444;
+            --shadow: 0 2px 10px rgba(0,0,0,0.3);
+            --input-bg: #3a3a3a;
+            --header-bg: #2d2d2d;
+        }
+
+        /* Apply theme variables */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .platform-header {
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dashboard-card, .profile-card, .profile-form-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .form-control, .form-input, .search-input, .filter-select {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        /* Messages Section Styles */
+        .messages-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+            height: 70vh;
+        }
+
+        .messages-sidebar {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .compose-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .compose-title, .users-title {
+            color: var(--text-color);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .compose-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message-input, .message-textarea {
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .message-input:focus, .message-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .send-message-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .send-message-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .users-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .user-item:hover {
+            background-color: rgba(102, 126, 234, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .user-avatar-small {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .user-name-small {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .messages-main {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .message-tab {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .message-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .message-tab:not(.active):hover {
+            background-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .notification-badge {
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .message-content {
+            flex: 1;
+            padding: 1.5rem;
+            display: none;
+            overflow-y: auto;
+        }
+
+        .message-content.active {
+            display: block;
+        }
+
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .welcome-message, .no-notifications {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-color);
+        }
+
+        .welcome-icon, .no-notifications-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-message h3, .no-notifications h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .welcome-message p, .no-notifications p {
+            opacity: 0.7;
+            line-height: 1.6;
+        }
+
+        .chat-message {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .chat-message.sent {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-left: auto;
+            max-width: 70%;
+        }
+
+        .chat-message.received {
+            background-color: rgba(102, 126, 234, 0.1);
+            color: var(--text-color);
+            max-width: 70%;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .message-sender {
+            font-weight: 600;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+        }
+
+        .message-text {
+            line-height: 1.5;
+        }
+
+        .notifications-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .notification-item {
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            background-color: rgba(102, 126, 234, 0.05);
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-sender {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .notification-message {
+            color: var(--text-color);
+            line-height: 1.5;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Theme Toggle Styles */
+        .theme-toggle-section {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .theme-toggle-section h4 {
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .theme-label {
+            font-size: 14px;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Card Actions for Jobs and Directory */
+        .job-card, .directory-card, .event-card {
+            position: relative;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .job-card:hover, .directory-card:hover, .event-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .card-actions {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .delete-btn {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* Admin Button Styles */
+        .admin-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            margin-left: auto;
+        }
+
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 0;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-form {
+            padding: 24px;
+        }
+
+        .modal-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .modal-form .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .modal-form label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .modal-form input,
+        .modal-form select,
+        .modal-form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+        }
+
+        .modal-form input:focus,
+        .modal-form select:focus,
+        .modal-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn--primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn--outline {
+            background: transparent;
+            color: #666;
+            border: 2px solid var(--border-color);
+        }
+
+        .btn--danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .demo-credentials {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 16px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        /* Directory card admin controls */
+        .directory-card {
+            position: relative;
+        }
+
+        .admin-controls {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .admin-control-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .details-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .remove-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+        }
+
+        .admin-control-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Job and Event card admin controls */
+        .job-admin-controls,
+        .event-admin-controls {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .modal-form .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .admin-btn {
+                align-self: flex-end;
+            }
+
+            .theme-toggle {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .messages-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .messages-sidebar {
+                order: 2;
+            }
+        }
+    </style>
+    <script type="module" src="auth.js"></script>
+</body>
+</html>
